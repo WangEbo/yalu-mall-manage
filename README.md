@@ -1,4 +1,5 @@
-# yalu-mall
+# yalu-mall-manage
+雅鹿官网后台管理
 
 ## 项目介绍
 
@@ -58,3 +59,4 @@ src -- 源码目录
 登录账号：
 admin
 macro123
+=======
