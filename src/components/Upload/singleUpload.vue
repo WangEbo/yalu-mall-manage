@@ -4,11 +4,13 @@
       :action="useOss?ossUploadUrl:minioUploadUrl"
       :data="useOss?dataObj:null"
       list-type="picture"
-      :multiple="false" :show-file-list="showFileList"
+      :multiple="false"
+      :show-file-list="showFileList"
       :file-list="fileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
+      :http-request="httpRequest"
       :on-preview="handlePreview">
       <el-button size="small" type="primary">点击上传</el-button>
       <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10MB</div>
@@ -19,8 +21,27 @@
   </div>
 </template>
 <script>
-  import {policy} from '@/api/oss'
 
+
+  import {policy} from '@/api/oss'
+  import store from '@/store'
+  import { getToken } from '@/utils/auth'
+
+
+  function getBody(xhr) {
+    var text = xhr.responseText || xhr.response;
+    if (!text) {
+      return text;
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      return text;
+    }
+  }
+
+  const BASE_API = process.env.BASE_API;
   export default {
     name: 'singleUpload',
     props: {
@@ -63,9 +84,11 @@
           // callback:'',
         },
         dialogVisible: false,
-        useOss:true, //使用oss->true;使用MinIO->false
-        ossUploadUrl:'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
-        minioUploadUrl:'http://localhost:8080/minio/upload',
+        useOss: false, //使用oss->true;使用MinIO->false
+        ossUploadUrl: 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
+        minioUploadUrl: BASE_API + 'minio/upload',
+        
+
       };
     },
     methods: {
@@ -77,6 +100,66 @@
       },
       handlePreview(file) {
         this.dialogVisible = true;
+      },
+
+      httpRequest: (option)=>  {
+        if (typeof XMLHttpRequest === 'undefined') {
+          return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        var action = option.action;
+
+        if (xhr.upload) {
+          xhr.upload.onprogress = function progress(e) {
+            if (e.total > 0) {
+              e.percent = e.loaded / e.total * 100;
+            }
+            option.onProgress(e);
+          };
+        }
+
+        var formData = new FormData();
+
+        if (option.data) {
+          Object.keys(option.data).forEach(function (key) {
+            formData.append(key, option.data[key]);
+          });
+        }
+
+        formData.append(option.filename, option.file);
+
+        xhr.onerror = function error(e) {
+          option.onError(e);
+        };
+
+        xhr.onload = function onload() {
+          if (xhr.status < 200 || xhr.status >= 300) {
+            return option.onError(getError(action, option, xhr));
+          }
+
+          option.onSuccess(getBody(xhr));
+        };
+
+        xhr.open('post', action, true);
+
+        if (store.getters.token) {
+          xhr.setRequestHeader('Authorization', getToken()); //携带token票据
+        }
+
+        if (option.withCredentials && 'withCredentials' in xhr) {
+          xhr.withCredentials = true;
+        }
+
+        var headers = option.headers || {};
+
+        for (var item in headers) {
+          if (headers.hasOwnProperty(item) && headers[item] !== null) {
+            xhr.setRequestHeader(item, headers[item]);
+          }
+        }
+        xhr.send(formData);
+        return xhr;
       },
       beforeUpload(file) {
         let _self = this;
@@ -114,8 +197,19 @@
     }
   }
 </script>
-<style>
-
+<style lang="scss">
+.el-upload-list--picture .el-upload-list__item-thumbnail{
+  border-radius: 5px;
+  width: auto;
+  height: auto;
+  max-width: 70px;
+  max-height: 70px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  top: 50%;
+  transform: translateY(-50%);
+}
 </style>
 
 

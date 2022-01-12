@@ -3,6 +3,7 @@
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" trigger="click">
+      <span class="avatar-name">{{name}}</span>
       <div class="avatar-wrapper">
         <img class="user-avatar" :src="avatar">
         <i class="el-icon-caret-bottom"></i>
@@ -26,16 +27,19 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
+let computed  = mapGetters([
+  'sidebar',
+  'avatar',
+  'name'
+])
+console.log(computed);
 export default {
   components: {
     Breadcrumb,
     Hamburger
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
+    ...computed
   },
   methods: {
     toggleSideBar() {
@@ -72,7 +76,15 @@ export default {
     display: inline-block;
     position: absolute;
     right: 35px;
+    .avatar-name{
+      height: 100%;
+      line-height: 1;
+      vertical-align: middle;
+      display: inline-block;
+      margin-right: 8px;
+    }
     .avatar-wrapper {
+      display: inline-block;
       cursor: pointer;
       margin-top: 5px;
       position: relative;
