@@ -132,23 +132,6 @@
         <el-button type="primary" @click="handleDialogConfirm()" size="small">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      title="分配角色"
-      :visible.sync="allocDialogVisible"
-      width="30%">
-      <el-select v-model="allocRoleIds" multiple placeholder="请选择" size="small" style="width: 80%">
-        <el-option
-          v-for="item in allRoleList"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id">
-        </el-option>
-      </el-select>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="allocDialogVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="handleAllocDialogConfirm()" size="small">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -289,29 +272,6 @@
           }
         })
       },
-      handleAllocDialogConfirm(){
-        this.$confirm('是否要确认?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let params = new URLSearchParams();
-          params.append("adminId", this.allocAdminId);
-          params.append("roleIds", this.allocRoleIds);
-          allocRole(params).then(response => {
-            this.$message({
-              message: '分配成功！',
-              type: 'success'
-            });
-            this.allocDialogVisible = false;
-          })
-        })
-      },
-      handleSelectRole(index,row){
-        this.allocAdminId = row.id;
-        this.allocDialogVisible = true;
-        this.getRoleListByAdmin(row.id);
-      },
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
@@ -320,22 +280,6 @@
           this.total = response.data.total;
         });
       },
-      getAllRoleList() {
-        fetchAllRoleList().then(response => {
-          this.allRoleList = response.data;
-        });
-      },
-      getRoleListByAdmin(adminId) {
-        getRoleByAdmin(adminId).then(response => {
-          let allocRoleList = response.data;
-          this.allocRoleIds=[];
-          if(allocRoleList!=null&&allocRoleList.length>0){
-            for(let i=0;i<allocRoleList.length;i++){
-              this.allocRoleIds.push(allocRoleList[i].id);
-            }
-          }
-        });
-      }
     }
   }
 </script>

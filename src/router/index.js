@@ -97,25 +97,25 @@ export const asyncRouterMap = [
       {
         path: 'overview',
         name: 'info-overview',
-        component: () => import('@/views/info/overview'),
+        component: () => import('@/views/info/overview/index'),
         meta: { title: '品牌概况', icon: 'info-overview' }
       },
       {
         path: 'csr',
         name: 'info-csr',
-        component: () => import('@/views/info/csr'),
+        component: () => import('@/views/info/csr/index'),
         meta: { title: '社会责任', icon: 'info-csr' }
       },
       {
         path: 'brand',
         name: 'info-brand',
-        component: () => import('@/views/info/brand'),
+        component: () => import('@/views/info/brand/index'),
         meta: { title: '品牌历程', icon: 'info-brand' }
       },
       {
         path: 'news',
         name: 'info-news',
-        component: () => import('@/views/info/news'),
+        component: () => import('@/views/info/news/index'),
         meta: { title: '资讯管理', icon: 'info-news' }
       },
     ]

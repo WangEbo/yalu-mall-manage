@@ -85,7 +85,6 @@ export default {
       rules: {
         logo: [
           {required: true, message: '请输入商品名称', trigger: 'blur'},
-          {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
         ],
         teamOrderInfo: [
           {required: true, message: '请输入', trigger: 'blur'},
