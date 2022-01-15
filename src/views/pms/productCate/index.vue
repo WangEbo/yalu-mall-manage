@@ -10,6 +10,9 @@
         添加
       </el-button>
     </el-card>
+    <div class="opts-bar" style="margin-top: 12px;">
+      <el-button v-show="parentIdStack.length > 1" type="primary" @click="back">返回上级</el-button>
+    </div>
     <div class="table-container">
       <el-table ref="productCateTable"
                 style="width: 100%"
@@ -24,12 +27,12 @@
         <el-table-column label="级别" width="100" align="center">
           <template slot-scope="scope">{{scope.row.level | levelFilter}}</template>
         </el-table-column>
-        <el-table-column label="商品数量" width="100" align="center">
+        <!-- <el-table-column label="商品数量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.productCount }}</template>
-        </el-table-column>
-        <el-table-column label="数量单位" width="100" align="center">
+        </el-table-column> -->
+        <!-- <el-table-column label="数量单位" width="100" align="center">
           <template slot-scope="scope">{{scope.row.productUnit }}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="导航栏" width="100" align="center">
           <template slot-scope="scope">
             <el-switch
@@ -60,10 +63,10 @@
               :disabled="scope.row.level | disableNextLevel"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
             </el-button>
-            <el-button
+            <!-- <el-button
               size="mini"
               @click="handleTransferProduct(scope.$index, scope.row)">转移商品
-            </el-button>
+            </el-button> -->
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
@@ -103,6 +106,7 @@
     name: "productCateList",
     data() {
       return {
+        parentIdStack: [0],
         list: null,
         total: null,
         listLoading: true,
@@ -118,12 +122,17 @@
       this.getList();
     },
     watch: {
-      $route(route) {
-        this.resetParentId();
-        this.getList();
+      parentIdStack: {
+        handler(nval){
+          this.getList()
+        }
       }
     },
     methods: {
+      back(){
+        if(this.parentIdStack.length <= 0) return
+        this.parentIdStack.pop()
+      },
       resetParentId(){
         this.listQuery.pageNum = 1;
         if (this.$route.query.parentId != null) {
@@ -137,7 +146,7 @@
       },
       getList() {
         this.listLoading = true;
-        fetchList(this.parentId, this.listQuery).then(response => {
+        fetchList(this.parentIdStack[this.parentIdStack.length - 1], this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;
@@ -181,13 +190,13 @@
         });
       },
       handleShowNextLevel(index, row) {
-        this.$router.push({path: '/pms/productCate', query: {parentId: row.id}})
+        this.parentIdStack.push(row.id)
       },
       handleTransferProduct(index, row) {
         console.log('handleAddProductCate');
       },
       handleUpdate(index, row) {
-        this.$router.push({path:'/pms/updateProductCate',query:{id:row.id}});
+        this.$router.push({path:'/pms/updateProductCate',query:{id: row.id}});
       },
       handleDelete(index, row) {
         this.$confirm('是否要删除该品牌', '提示', {

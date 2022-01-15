@@ -45,7 +45,10 @@
   export default {
     name: 'singleUpload',
     props: {
-      value: String
+      value: String,
+      validateProp: {
+        type: String
+      }
     },
     computed: {
       imageUrl() {
@@ -88,12 +91,19 @@
         ossUploadUrl: 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
         minioUploadUrl: BASE_API + 'minio/upload',
         
-
       };
     },
     methods: {
       emitInput(val) {
-        this.$emit('input', val)
+        this.$emit('input', val);
+        let parent = this.$parent;
+        while(parent){
+          if(parent.$options.componentName == 'ElForm' && this.validateProp && parent.rules[this.validateProp]){
+            parent.validateField(this.validateProp)
+            return
+          }
+          parent = parent.$parent
+        }
       },
       handleRemove(file, fileList) {
         this.emitInput('');

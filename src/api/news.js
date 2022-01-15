@@ -2,12 +2,30 @@ import request from '@/utils/request'
 
 
 /**
+ * 添加
+ * @param {string} content 内容 true
+ * @param {string} intro 简介  true
+ * @param {string} coverImg 封面图片 true
+ * @param {string} createTime 时间 
+ * @param {string} title 简介 true
+ * @return {Promise}
+ */
+export function addNews(data) {
+  return request({
+    url:'/brand-news/add',
+    method:'post',
+    data
+  })
+}
+
+
+/**
  * 删除
  * @param {string} id true
  */
- export function delOverview(id) {
+ export function delNews(id) {
   return request({
-    url:`/brand-overview/delete/${id}`,
+    url:`/brand-news/delete/${id}`,
     method:'post',
   })
 }
@@ -21,13 +39,14 @@ import request from '@/utils/request'
  * @param {int32} pageSize false
  */
 
- export function overviewList(params) {
+ export function newsList(params) {
   return request({
-    url:`/brand-overview/list`,
+    url:`/brand-news/list`,
     method:'get',
     params
   })
 }
+
 
 
 
@@ -40,36 +59,20 @@ import request from '@/utils/request'
  * @return {Promise}
  */
 
-export function updateOverview(id, data) {
+export function updateNews(id, data) {
   return request({
-    url:`/brand-overview/update/${id}`,
+    url:`/brand-news/update/${id}`,
     method:'post',
     data
   })
 }
 
-
-
-/**
- * 添加
- * @param {string} content 内容 true
- * @param {string} imgUrl 图片 false
- * @param {string} title 标题  true
- * @return {Promise}
- */
- export function addOverview(data) {
-  return request({
-    url:`/brand-overview/add`,
-    method:'post',
-    data
-  })
-}
 
 
 //通过id获取单个
-export function getOverviewById(id) {
+export function getNewsById(id) {
   return request({
-    url:`/brand-overview/${id}`,
+    url:`/brand-news/${id}`,
     method:'get',
   })
 }

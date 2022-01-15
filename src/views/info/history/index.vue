@@ -27,17 +27,11 @@
     </el-card>
     <div class="table-container">
       <el-table ref="adminTable" :data="list" style="width: 100%;" v-loading="listLoading" border>
-        <el-table-column label="标题" align="center" width="200" >
-          <template slot-scope="scope">{{scope.row.title}}</template>
+        <el-table-column label="事件时间" align="center" width="200" >
+          <template slot-scope="scope">{{scope.row.eventTime}}</template>
         </el-table-column>
-         <el-table-column label="资讯时间" align="center" width="200" >
-          <template slot-scope="scope">{{scope.row.createTime}}</template>
-        </el-table-column>
-         <el-table-column label="封面图片" align="center" width="200" >
-           <template style="white-space: nowrap;" slot-scope="scope"><img height="50px" :src="scope.row.coverImg" alt=""></template>
-        </el-table-column>
-         <el-table-column label="简介" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{scope.row.intro}}</template>
+        <el-table-column label="事件内容" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.eventContent}}</template>
         </el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
@@ -56,27 +50,17 @@
     </div>
     <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑用户':'添加用户'" :visible.sync="dialogVisible" width="900">
       <el-form :model="curDetail" ref="mainForm" :rules="formRules" label-width="150px" size="small">
-         <el-form-item label="标题：" prop="title">
-          <el-input v-model="curDetail.title" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="资讯时间：" prop="createTime">
+        <el-form-item label="事件时间：" prop="eventTime">
           <el-date-picker
-            v-model="curDetail.createTime"
+            v-model="curDetail.eventTime"
             type="datetime"
             value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="选择资讯时间">
+            placeholder="选择事件时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="封面图片：" prop="coverImg" :class="[formDisabled ? 'form-item-logo-disabled' : 'form-item-logo']">
-          <single-upload validateProp="coverImg" v-model="curDetail.coverImg" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+        <el-form-item label="事件内容：" prop="eventContent">
+          <el-input type="textarea" class="input-content"  :autosize="{ minRows: 8, maxRows: 8}" v-model="curDetail.eventContent" style="width: 500px;"></el-input>
         </el-form-item>
-        <el-form-item label="简介：" prop="intro">
-          <el-input type="textarea" class="input-content"  :autosize="{ minRows: 3, maxRows: 8}" v-model="curDetail.intro" style="width: 500px;"></el-input>
-        </el-form-item>
-        <el-form-item label="详情：" prop="content">
-          <Editor v-model="curDetail.content" @input="editorChange"></Editor>
-        </el-form-item>
-        
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
@@ -89,25 +73,21 @@
 <script>
 import SingleUpload from '@/components/Upload/singleUpload'
 
-import { addNews, delNews, newsList, updateNews, getNewsById, } from '@/api/news'
+import { addHistory, delHistory, historyList, updateHistory, getHistoryById, } from '@/api/history'
 import { formatDate } from '@/utils/date';
-import Editor from '@/components/Editor'
 
 const defaultListQuery = {
   pageNum: 1,
   pageSize: 10,
   keyword: null
 };
-const defaultNews = {
-  title: null,
-  createTime: null,
-  coverImg: null,
-  intro: null,
-  content: null,
+const defaultHistory = {
+  eventTime: null,
+  eventContent: null,
 };
 export default {
   name: 'adminList',
-  components: {SingleUpload, Editor},
+  components: {SingleUpload},
   data() {
     return {
       listQuery: Object.assign({}, defaultListQuery),
@@ -118,21 +98,13 @@ export default {
       isEdit: false,
       dataList: [],
       formDisabled: true,
-      curDetail: defaultNews,
+      curDetail: defaultHistory,
       formRules: {
-        title:  {required: true, trigger: 'blur', message: '请输入标题'},
-        createTime:  {required: true, trigger: 'blur', message: '请输入资讯时间'},
-        coverImg: [
-          {required: true, message: '请上传封面图片', trigger: 'blur'},
-        ],
-        intro:  [
-          {required: true, trigger: 'blur', message: '请输入简介'},
+        eventTime:  {required: true, trigger: 'blur', message: '请输入事件时间'},
+        eventContent:  [
+          {required: true, trigger: 'blur', message: '请输入事件内容'},
           {min: 2, max: 5000, message: '长度在 2 到 5000 个字符', trigger: 'blur'}
-        ],
-        content:  [
-          {required: true, trigger: 'blur', message: '请输入详情'},
-          {min: 2, max: 5000, message: '长度在 2 到 1000 个字符', trigger: 'blur'}
-        ],
+        ]
       }
     }
   },
@@ -168,7 +140,7 @@ export default {
     handleAdd() {
       this.dialogVisible = true;
       this.isEdit = false;
-      this.curDetail = Object.assign({}, defaultNews);
+      this.curDetail = Object.assign({}, defaultHistory);
       this.$nextTick(()=> {
         this.$refs.mainForm.clearValidate()
       })
@@ -179,7 +151,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delNews(row.id).then(response => {
+        delHistory(row.id).then(response => {
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -205,7 +177,7 @@ export default {
             type: 'warning'
           }).then(() => {
             if (this.isEdit) {
-              updateNews(this.curDetail.id, this.curDetail).then(response => {
+              updateHistory(this.curDetail.id, this.curDetail).then(response => {
                 this.$message({
                   message: '修改成功！',
                   type: 'success'
@@ -214,7 +186,7 @@ export default {
                 this.getList();
               })
             } else {
-              addNews(this.curDetail).then(response => {
+              addHistory(this.curDetail).then(response => {
                 this.$message({
                   message: '添加成功！',
                   type: 'success'
@@ -227,13 +199,9 @@ export default {
         }
       })
     },
-    editorChange(contentHmtl, eventName) {
-      this.curDetail.content = contentHmtl;
-      console.log(eventName);
-    },
     getList() {
       this.listLoading = true;
-      newsList(this.listQuery).then(response => {
+      historyList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data;
         this.total = response.data && response.data.length;

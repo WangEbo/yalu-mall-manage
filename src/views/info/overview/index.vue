@@ -31,7 +31,7 @@
           <template slot-scope="scope">{{scope.row.title}}</template>
         </el-table-column>
         <el-table-column label="图片" align="center" width="300">
-          <template style="white-space: nowrap;" slot-scope="scope"><img height="30px" :src="scope.row.imgUrl" alt=""></template>
+          <template style="white-space: nowrap;" slot-scope="scope"><img height="50px" :src="scope.row.imgUrl" alt=""></template>
         </el-table-column>
         <el-table-column label="内容" align="center" :show-overflow-tooltip="true">
           <template slot-scope="scope">{{scope.row.content}}</template>
@@ -51,15 +51,15 @@
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper" :current-page.sync="listQuery.pageNum" :page-size="listQuery.pageSize" :page-sizes="[10,15,20]" :total="total">
       </el-pagination>
     </div>
-    <el-dialog :title="isEdit?'编辑用户':'添加用户'" :visible.sync="dialogVisible" width="900">
-      <el-form :model="curDetail" ref="adminForm" label-width="150px" size="small">
-        <el-form-item label="标题：">
+    <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑用户':'添加用户'" :visible.sync="dialogVisible" width="900">
+      <el-form :model="curDetail" ref="mainForm" :rules="formRules" label-width="150px" size="small">
+        <el-form-item label="标题：" prop="title">
           <el-input v-model="curDetail.title" style="width: 250px"></el-input>
         </el-form-item>
-        <el-form-item label="图片：" prop="im" :class="[formDisabled ? 'form-item-logo-disabled' : 'form-item-logo']">
-        <single-upload v-model="curDetail.imgUrl" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
-      </el-form-item>
-        <el-form-item label="内容：">
+        <el-form-item label="图片：" prop="imgUrl" :class="[formDisabled ? 'form-item-logo-disabled' : 'form-item-logo']">
+          <single-upload validateProp="imgUrl" v-model="curDetail.imgUrl" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+        </el-form-item>
+        <el-form-item label="内容：" prop="content">
           <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 8}" class="input-content"  v-model="curDetail.content" style="width: 500px;"></el-input>
         </el-form-item>
       </el-form>
@@ -98,10 +98,7 @@ export default {
       listLoading: false,
       dialogVisible: false,
       isEdit: false,
-      allocDialogVisible: false,
-      allocRoleIds: [],
       dataList: [],
-      allocAdminId: null,
       formDisabled: true,
       curDetail: defaultOverview,
       formRules: {
@@ -146,9 +143,12 @@ export default {
       this.getList();
     },
     handleAdd() {
-      this.dialogVisible = true;
       this.isEdit = false;
       this.curDetail = Object.assign({}, defaultOverview);
+      this.dialogVisible = true;
+      this.$nextTick(()=> {
+        this.$refs.mainForm.clearValidate()
+      })
     },
     handleDelete(index, row) {
       this.$confirm('是否要删除该条品牌概况?', '提示', {
@@ -168,31 +168,38 @@ export default {
     handleUpdate(index, row) {
       this.dialogVisible = true;
       this.isEdit = true;
-      this.curDetail = Object.assign({}, row);
+      this.curDetail = row;
+      this.$nextTick(()=> {
+        this.$refs.mainForm.clearValidate()
+      })
     },
     handleDialogConfirm() {
-      this.$confirm('是否要确认?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        if (this.isEdit) {
-          updateOverview(this.curDetail.id, this.curDetail).then(response => {
-            this.$message({
-              message: '修改成功！',
-              type: 'success'
-            });
-            this.dialogVisible = false;
-            this.getList();
-          })
-        } else {
-          addOverview(this.curDetail).then(response => {
-            this.$message({
-              message: '添加成功！',
-              type: 'success'
-            });
-            this.dialogVisible = false;
-            this.getList();
+      this.$refs.mainForm.validate(valid=> {
+        if(valid){
+          this.$confirm('是否要确认?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            if (this.isEdit) {
+              updateOverview(this.curDetail.id, this.curDetail).then(response => {
+                this.$message({
+                  message: '修改成功！',
+                  type: 'success'
+                });
+                this.dialogVisible = false;
+                this.getList();
+              })
+            } else {
+              addOverview(this.curDetail).then(response => {
+                this.$message({
+                  message: '添加成功！',
+                  type: 'success'
+                });
+                this.dialogVisible = false;
+                this.getList();
+              })
+            }
           })
         }
       })

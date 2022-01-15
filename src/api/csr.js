@@ -5,7 +5,7 @@ import request from '@/utils/request'
  * 添加
  * @param {string} content 内容 true
  * @param {string} imgUrl 图片 false
- * @param {string} title 内标题  true
+ * @param {string} title 标题  true
  * @return {Promise}
  */
 export function addCsr(data) {
@@ -53,7 +53,7 @@ export function addCsr(data) {
  * @param {string} id 内容 true
  * @param {string} content 内容 true
  * @param {string} imgUrl 图片 false
- * @param {string} title 内标题  true
+ * @param {string} title 标题  true
  * @return {Promise}
  */
 
