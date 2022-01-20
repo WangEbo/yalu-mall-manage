@@ -48,7 +48,7 @@
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper" :current-page.sync="listQuery.pageNum" :page-size="listQuery.pageSize" :page-sizes="[10,15,20]" :total="total">
       </el-pagination>
     </div>
-    <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑用户':'添加用户'" :visible.sync="dialogVisible" width="900">
+    <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑历程':'添加历程'" :visible.sync="dialogVisible" width="900">
       <el-form :model="curDetail" ref="mainForm" :rules="formRules" label-width="150px" size="small">
         <el-form-item label="事件时间：" prop="eventTime">
           <el-date-picker
@@ -203,8 +203,8 @@ export default {
       this.listLoading = true;
       historyList(this.listQuery).then(response => {
         this.listLoading = false;
-        this.list = response.data;
-        this.total = response.data && response.data.length;
+        this.list = response.data.list;
+        this.total = response.data.total
       });
     },
   }

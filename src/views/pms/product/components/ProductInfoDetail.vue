@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top: 50px">
-    <el-form :model="value" :rules="rules" ref="productInfoForm" label-width="120px" style="width: 600px" size="small">
+    <el-form :model="value" :rules="rules" @submit.stop.prevent ref="productInfoForm" label-width="120px" style="width: 600px" size="small">
       <el-form-item label="商品分类：" prop="productCategoryId">
         <el-cascader
           v-model="selectProductCateValue"
@@ -11,12 +11,18 @@
         <el-input v-model="value.name"></el-input>
       </el-form-item>
       <el-form-item label="图片：" prop="pic" >
-        <single-upload validateProp="pic" v-model="value.pic" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+        <single-upload v-model="value.pic" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
       </el-form-item>
-      <el-form-item label="商品售价：">
+      <el-form-item label="颜色：" prop="color">
+          <color-picker v-model="value.color"></color-picker>
+      </el-form-item>
+      <el-form-item label="商品售价：" prop="price">
         <el-input v-model="value.price"></el-input>
       </el-form-item>
-      <el-form-item label="关键词：">
+      <el-form-item label="平台销售链接：" prop="url">
+        <el-input v-model="value.url"></el-input>
+      </el-form-item>
+      <el-form-item label="关键词：" prop="keywords" >
         <el-input v-model="value.keywords"></el-input>
       </el-form-item>
       <el-form-item label="商品推荐：">
@@ -43,11 +49,16 @@
 <script>
   import {fetchListWithChildren} from '@/api/productCate'
   import SingleUpload from '@/components/Upload/singleUpload'
+  import ColorPicker from './ColorPicker'
+
   export default {
     name: "ProductInfoDetail",
-    components: { SingleUpload },
+    components: { SingleUpload, ColorPicker },
     props: {
-      value: Object,
+      value: {
+        type: Object,
+
+      },
       isEdit: {
         type: Boolean,
         default: false
@@ -60,14 +71,21 @@
         selectProductCateValue: [],
         productCateOptions: [],
         rules: {
-          name: [
-            {required: true, message: '请输入商品名称', trigger: 'blur'},
-            {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
+          productCategoryId: [
+            {required: true, trigger: 'blur', message: '请选择商品类型'},
           ],
-          subTitle: [{required: true, message: '请输入商品副标题', trigger: 'blur'}],
-          productCategoryId: [{required: true, message: '请选择商品分类', trigger: 'blur'}],
-          description: [{required: true, message: '请输入商品介绍', trigger: 'blur'}],
-          requiredProp: [{required: true, message: '该项为必填项', trigger: 'blur'}]
+          name: [
+            {required: true, trigger: 'blur', message: '请输入商品名称'},
+          ],
+          pic: [
+            {required: true, trigger: 'blur', message: '请上传商品图片'},
+          ],
+          url: [
+            {required: true, trigger: 'blur', message: '请输入平台销售链接'},
+          ],
+          price: [
+            {required: true, trigger: 'blur', message: '请输入售价'},
+          ],
         }
       };
     },

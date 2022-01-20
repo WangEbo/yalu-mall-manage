@@ -7,9 +7,8 @@
       <el-form-item label="分类名称：" prop="name">
         <el-input v-model="productCate.name"></el-input>
       </el-form-item>
-      <el-form-item label="上级分类：">
-        <el-select v-model="productCate.parentId"
-                   placeholder="请选择分类">
+      <el-form-item label="上级分类：" >
+        <el-select v-model="productCate.parentId" placeholder="请选择分类">
           <el-option
             v-for="item in selectProductCateList"
             :key="item.id"
@@ -17,6 +16,9 @@
             :value="item.id">
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="封面图片：" prop="coverImg" :class="[]" v-show="!productCate.parentId">
+        <single-upload v-model="productCate.coverImg" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
       </el-form-item>
       <!-- <el-form-item label="数量单位：">
         <el-input v-model="productCate.productUnit"></el-input>
@@ -36,9 +38,9 @@
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="分类图标：">
+      <!-- <el-form-item label="分类图标：">
         <single-upload v-model="productCate.icon"></single-upload>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item 
         v-for="(filterProductAttr, index) in filterProductAttrList"
         :label="index | filterLabelFilter"
@@ -84,6 +86,7 @@
     // productUnit: '',
     showStatus: 0,
     sort: 0,
+    coverImg: '',
     // productAttributeIdList: []
   };
   export default {
@@ -99,16 +102,24 @@
       return {
         productCate: Object.assign({}, defaultProductCate),
         selectProductCateList: [],
-        rules: {
+        filterAttrs: [],
+      }
+    },
+    computed: {
+      rules(){
+        let rules = {
           name: [
             {required: true, message: '请输入品牌名称', trigger: 'blur'},
             {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
           ]
-        },
-        filterAttrs: [],
-        // filterProductAttrList: [{
-        //   value: []
-        // }]
+        }
+
+        if(!this.productCate.parentId){
+          rules.coverImg = [
+            {required: true, message: '你添加的为一级分类，请上传封面图', trigger: 'blur'},
+          ]
+        }
+        return rules
       }
     },
     created() {
@@ -192,7 +203,6 @@
                 });
               } else {
                 createProductCate(this.productCate).then(response => {
-                  this.$refs[formName].resetFields();
                   this.resetForm(formName);
                   this.$message({
                     message: '提交成功',
@@ -215,8 +225,12 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+        
         this.productCate = Object.assign({}, defaultProductCate);
         this.getSelectProductCateList();
+        this.$nextTick(()=> {
+          this.$refs[formName].clearValidate();
+        })
         // this.filterProductAttrList = [{
         //   value: []
         // }];

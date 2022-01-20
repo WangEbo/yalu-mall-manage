@@ -193,7 +193,7 @@
         this.listLoading = true;
         fetchList({}).then(response => {
           this.listLoading = false;
-          this.list = response.data;
+          this.list = response.data.list;
         });
       }
     }

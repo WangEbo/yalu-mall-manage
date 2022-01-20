@@ -68,7 +68,7 @@
         this.listLoading = true;
         fetchSelectList({flashPromotionId:this.$route.query.flashPromotionId}).then(response => {
           this.listLoading = false;
-          this.list = response.data;
+          this.list = response.data.list;
         });
       }
     }

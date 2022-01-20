@@ -51,12 +51,12 @@
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper" :current-page.sync="listQuery.pageNum" :page-size="listQuery.pageSize" :page-sizes="[10,15,20]" :total="total">
       </el-pagination>
     </div>
-    <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑用户':'添加用户'" :visible.sync="dialogVisible" width="900">
+    <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑社会责任':'添加社会责任'" :visible.sync="dialogVisible" width="900">
       <el-form :model="curDetail" ref="mainForm" :rules="formRules" label-width="150px" size="small">
         <el-form-item label="标题：" prop="title">
           <el-input v-model="curDetail.title" style="width: 250px"></el-input>
         </el-form-item>
-        <el-form-item label="图片：" prop="imgUrl" :class="[formDisabled ? 'form-item-logo-disabled' : 'form-item-logo']">
+        <el-form-item label="图片：" prop="imgUrl" :class="[]">
           <single-upload v-model="curDetail.imgUrl" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
         </el-form-item>
         <el-form-item label="内容：" prop="content">
@@ -211,8 +211,8 @@ export default {
       this.listLoading = true;
       csrList(this.listQuery).then(response => {
         this.listLoading = false;
-        this.list = response.data;
-        this.total = response.data && response.data.length;
+        this.list = response.data.list;
+        this.total = response.data.total
       });
     },
   }

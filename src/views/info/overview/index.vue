@@ -51,13 +51,13 @@
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper" :current-page.sync="listQuery.pageNum" :page-size="listQuery.pageSize" :page-sizes="[10,15,20]" :total="total">
       </el-pagination>
     </div>
-    <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑用户':'添加用户'" :visible.sync="dialogVisible" width="900">
+    <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑概况':'添加概况'" :visible.sync="dialogVisible" width="900">
       <el-form :model="curDetail" ref="mainForm" :rules="formRules" label-width="150px" size="small">
         <el-form-item label="标题：" prop="title">
           <el-input v-model="curDetail.title" style="width: 250px"></el-input>
         </el-form-item>
-        <el-form-item label="图片：" prop="imgUrl" :class="[formDisabled ? 'form-item-logo-disabled' : 'form-item-logo']">
-          <single-upload validateProp="imgUrl" v-model="curDetail.imgUrl" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+        <el-form-item label="图片：" prop="imgUrl" :class="[]">
+          <single-upload v-model="curDetail.imgUrl" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
         </el-form-item>
         <el-form-item label="内容：" prop="content">
           <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 8}" class="input-content"  v-model="curDetail.content" style="width: 500px;"></el-input>
@@ -208,7 +208,7 @@ export default {
       this.listLoading = true;
       overviewList(this.listQuery).then(response => {
         this.listLoading = false;
-        this.list = response.data;
+        this.list = response.data.list;
         this.total = response.data.length;
       });
     },

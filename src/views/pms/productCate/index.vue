@@ -27,6 +27,9 @@
         <el-table-column label="级别" width="100" align="center">
           <template slot-scope="scope">{{scope.row.level | levelFilter}}</template>
         </el-table-column>
+        <el-table-column v-if="parentIdStack.length == 1" label="封面图片" align="center" width="300">
+          <template style="white-space: nowrap;" slot-scope="scope"><img height="50px" :src="scope.row.coverImg" alt=""></template>
+        </el-table-column>
         <!-- <el-table-column label="商品数量" width="100" align="center">
           <template slot-scope="scope">{{scope.row.productCount }}</template>
         </el-table-column> -->
@@ -59,6 +62,7 @@
         <el-table-column label="设置" width="200" align="center">
           <template slot-scope="scope">
             <el-button
+              v-show="parentIdStack.length == 1"
               size="mini"
               :disabled="scope.row.level | disableNextLevel"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
@@ -69,8 +73,13 @@
             </el-button> -->
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="操作" width="280" align="center">
           <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="openCarouselDailog(scope.$index, scope.row)">设为轮播
+            </el-button>
             <el-button
               size="mini"
               @click="handleUpdate(scope.$index, scope.row)">编辑
@@ -96,14 +105,48 @@
         :total="total">
       </el-pagination>
     </div>
+
+    <el-dialog :close-on-click-modal="false" :title="'添加轮播图'" :visible.sync="carouselDialogVisible" width="900">
+      <el-form :model="carouselDetail" ref="mainForm" :rules="formRules" label-width="150px" size="small">
+        <el-form-item label="图片：" prop="pic" :class="[]">
+          <single-upload :disabled="true" v-model="carouselDetail.pic" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+        </el-form-item>
+        <el-form-item label="排序：" prop="sort">
+          <el-input v-model="carouselDetail.sort" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="商品推荐：">
+          <el-switch
+            v-model="carouselDetail.status"
+            :active-value="1"
+            :active-text="'上线'"
+            :inactive-value="0"
+            :inactive-text="'下线'">
+          </el-switch>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="carouselDialogVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="addToCateCarousel()" size="small">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import {fetchList,deleteProductCate,updateShowStatus,updateNavStatus} from '@/api/productCate'
+  import { addCateCarousel } from '@/api/carousel'
 
+  import SingleUpload from '@/components/Upload/singleUpload'
+
+  let defaultCarouselDetail = {
+    pic: null,
+    relationId: null,
+    sort: null,
+    status: null,
+  }
   export default {
     name: "productCateList",
+    components: { SingleUpload },
     data() {
       return {
         parentIdStack: [0],
@@ -114,7 +157,14 @@
           pageNum: 1,
           pageSize: 5
         },
-        parentId: 0
+        parentId: 0,
+        carouselDialogVisible: false,
+        carouselDetail: Object.assign({}, defaultCarouselDetail),
+        formRules: {
+          pic: [
+            {required: true, message: '请上传图片', trigger: 'blur'},
+          ],
+        }
       }
     },
     created() {
@@ -213,6 +263,26 @@
             this.getList();
           });
         });
+      },
+      openCarouselDailog(index, row){
+        this.carouselDialogVisible = true;
+        this.carouselDetail = Object.assign({}, defaultCarouselDetail, {
+          relationId: row.id,
+          pic: row.coverImg
+        });
+        this.$nextTick(()=> {
+          this.$refs.mainForm.clearValidate()
+        })
+      },
+      addToCateCarousel(){
+        addCateCarousel(this.carouselDetail).then(response=> {
+          this.$message({
+            message: '添加成功',
+            type: 'success',
+            duration: 1000
+          });
+          this.carouselDialogVisible = false;
+        })
       }
     },
     filters: {

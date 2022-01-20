@@ -1,5 +1,5 @@
 <template> 
-  <div>
+  <div :class="['s-upload', disabled ? 'disabled' : '']">
     <el-upload
       :action="useOss?ossUploadUrl:minioUploadUrl"
       :data="useOss?dataObj:null"
@@ -11,6 +11,7 @@
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
       :http-request="httpRequest"
+      :disabled="disabled"
       :on-preview="handlePreview">
       <el-button size="small" type="primary">点击上传</el-button>
       <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10MB</div>
@@ -45,10 +46,11 @@
   export default {
     name: 'singleUpload',
     props: {
+      disabled: {
+        type: Boolean,
+        default: false
+      },
       value: String,
-      validateProp: {
-        type: String
-      }
     },
     computed: {
       imageUrl() {
@@ -97,9 +99,13 @@
       emitInput(val) {
         this.$emit('input', val);
         let parent = this.$parent;
+        let validateField;
         while(parent){
-          if(parent.$options.componentName == 'ElForm' && this.validateProp && parent.rules[this.validateProp]){
-            parent.validateField(this.validateProp)
+          if(parent.$options.componentName == 'ElFormItem'){
+            validateField = parent.prop
+          }
+          if(parent.$options.componentName == 'ElForm' && validateField && parent.rules[validateField]){
+            parent.validateField(validateField)
             return
           }
           parent = parent.$parent
@@ -220,6 +226,13 @@
   top: 50%;
   transform: translateY(-50%);
 }
+
+.s-upload.disabled{
+  .el-upload,.el-upload__tip{
+    display: none;
+  }
+}
+
 </style>
 
 

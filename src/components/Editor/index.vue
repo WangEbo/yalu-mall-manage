@@ -10,6 +10,14 @@ const id = 0;
 let ue;
 export default {
   name: 'Editor',
+  props: {
+    value: {
+      type: String
+    },
+    initalValue: {
+      type: String
+    }
+  },
   data(){
     return {
       id: 'ue-' + this._uid
@@ -19,9 +27,9 @@ export default {
 
   },
   watch: {
-    value: {
+    initalValue: {
       handler(nval){
-
+        this.setContent()
       }
     }
   },
@@ -60,7 +68,7 @@ export default {
     setContent(){
       let ue = this.getUe();
       if(ue){
-        ue.setContent(this.value);
+        ue.setContent(this.initalValue);
       }
     }
   },
