@@ -2,7 +2,7 @@
   <div class="opt-wrap">
     	<ul>
     		<li :class="{active: item.color == value }" v-for="(item, i) in colors" :key="i">
-    			<button :disabled="disabled" @click.stop="selectColor(item)" :style="{'background-color': item.color}"></button>
+    			<button :disabled="disabled" @click.stop="selectColor($event, item)" :style="{'background-color': item.color}"></button>
     		</li>
     	</ul>
   </div>
@@ -36,7 +36,7 @@ export default {
 	watch: {
 	},
 	methods: {
-		selectColor(item){
+		selectColor(e, item){
 			this.$emit('input', item.color)
 		}
 	}

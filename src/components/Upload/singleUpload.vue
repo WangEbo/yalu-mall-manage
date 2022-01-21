@@ -122,7 +122,7 @@
         if (typeof XMLHttpRequest === 'undefined') {
           return;
         }
-
+        debugger
         var xhr = new XMLHttpRequest();
         var action = option.action;
 

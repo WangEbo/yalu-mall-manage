@@ -66,7 +66,6 @@
                     message: '提交成功',
                     duration:1000
                   });
-                  this.$router.back();
                 });
               }else{
                 createProduct(this.productParam).then(response=>{
@@ -75,6 +74,7 @@
                     message: '提交成功',
                     duration:1000
                   });
+                  // this.$refs.detail.$refs.productInfoForm.resetFields();
                 });
               }
             }).catch(err=> {

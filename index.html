@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>mall-admin-web</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144208445-2"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144208445-2"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -22,20 +23,8 @@
         s.parentNode.insertBefore(hm, s);
       })();
     </script>
-    <script>
-      // 基础配置文件路径
-      window.UEDITOR_HOME_URL = '/static/ueditor/';
-      // 编辑器关联服务器地址
-      window.UEDITOR_SERVERURL = '/';
-      
-      window.UEDITOR_IMAGEURL = '/minio/upload';
-    </script>
-    <script src="/static/ueditor/ueditor.config.js"></script>
-    <script src="/static/ueditor/ueditor.all.js"></script>
   </head>
   <body>
-    <!--<script src="./static/tinymce4.7.5/tinymce.min.js"></script>-->
-    <script src="https://unpkg.com/tinymce@4.7.5/tinymce.min.js"></script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>

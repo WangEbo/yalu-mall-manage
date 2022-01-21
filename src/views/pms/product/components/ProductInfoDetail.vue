@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top: 50px">
-    <el-form :model="value" :rules="rules" @submit.stop.prevent ref="productInfoForm" label-width="120px" style="width: 600px" size="small">
+    <el-form :model="value" :rules="rules" @submit.native.prevent ref="productInfoForm" label-width="120px" style="width: 600px" size="small">
       <el-form-item label="商品分类：" prop="productCategoryId">
         <el-cascader
           v-model="selectProductCateValue"
@@ -119,7 +119,7 @@
       //处理编辑逻辑
       handleEditCreated(){
         if(this.value.productCategoryId!=null){
-          this.selectProductCateValue.push(this.value.cateParentId);
+          this.selectProductCateValue.push(this.value.productCategoryParentId);
           this.selectProductCateValue.push(this.value.productCategoryId);
         }
         this.hasEditCreated=true;

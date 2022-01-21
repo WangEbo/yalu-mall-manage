@@ -208,7 +208,7 @@
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
-    pageSize: 5,
+    pageSize: 10,
     publishStatus: null,
     verifyStatus: null,
     productSn: null,

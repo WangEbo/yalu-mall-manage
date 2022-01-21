@@ -79,7 +79,8 @@
           <el-input type="textarea" class="input-content"  :autosize="{ minRows: 3, maxRows: 8}" v-model="curDetail.intro" style="width: 500px;"></el-input>
         </el-form-item>
         <el-form-item label="详情：" prop="content">
-          <Editor ref="formEditor" :initalValue="curDetail.initalContent" v-model="curDetail.content" @input="editorChange"></Editor>
+          <!-- <Editor ref="formEditor" :initalValue="curDetail.initalContent" v-model="curDetail.content" @input="editorChange"></Editor> -->
+          <YEditor v-model="curDetail.initalContent"></YEditor>
         </el-form-item>
         
       </el-form>
@@ -122,7 +123,7 @@ import SingleUpload from '@/components/Upload/singleUpload'
 import { addnewsCarousel } from '@/api/carousel'
 import { addNews, delNews, newsList, updateNews, getNewsById, } from '@/api/news'
 import { formatDate } from '@/utils/date';
-import Editor from '@/components/Editor'
+import YEditor from '@/components/YEditor'
 
 const defaultListQuery = {
   pageNum: 1,
@@ -146,7 +147,7 @@ let defaultCarouselDetail = {
 }
 export default {
   name: 'adminList',
-  components: {SingleUpload, Editor},
+  components: {SingleUpload, YEditor},
   data() {
     return {
       listQuery: Object.assign({}, defaultListQuery),
