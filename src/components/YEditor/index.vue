@@ -42,10 +42,8 @@ ImageBlot.tagName = 'img';
 Quill.register(ImageBlot)
 import request from '@/utils/request'
 
-import { getToken } from '@/utils/auth'
 let quill;
 const id = 0;
-let ue;
 export default {
   name: 'YEditor',
   props: {
@@ -85,7 +83,7 @@ export default {
         ['blockquote', 'code-block'],
         [{ 'header': 1 }, { 'header': 2 }], //自定义按钮值
         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        [{ 'script': 'sub' }, { 'script': 'super' }], // 上标/下标
+        // [{ 'script': 'sub' }, { 'script': 'super' }], // 上标/下标
         [{ 'indent': '-1' }, { 'indent': '+1' }], // 减少缩进/缩进
         [{ 'direction': 'rtl' }], // 文本方向
         [{ 'size': ['small', false, 'large', 'huge'] }], // 自定义下拉
@@ -95,8 +93,8 @@ export default {
         [{ 'align': [] }],
         ['clean'], //移除格式化
         ['image'],
-        ['video'],
-        ['formula'] //需要加载cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js
+        // ['video'],
+        // ['formula'] //需要加载cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js
       ];
 
       /* 实例化编辑器 */
@@ -130,7 +128,8 @@ export default {
 
       /* 事件的绑定；注意：text-change这个获取值放这的话是编辑器内容发生改变的时候才能获取到值,如果想每次提交都有值，要放到提交那 */
       quill.on('text-change', (delta, oldDelta, source)=> {
-        this.$emit('input', delta)
+        this.$emit('input', quill.container.firstChild.innerHTML)
+
       });
 
       let toolbar = quill.getModule('toolbar');
@@ -174,13 +173,22 @@ export default {
           fileInput.files = dt.files
         }
       })
+    },
+    setContent(){
+      quill.pasteHTML(this.initalValue)
     }
   },
   destroyed() {
-    UE.delEditor(this.id)
+
   }
 }
 </script>
 
 <style lang="scss">
+.editor-wrap{
+  #editor{
+    height: 400px;
+  }
+}
+
 </style>

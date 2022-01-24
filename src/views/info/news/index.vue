@@ -79,8 +79,7 @@
           <el-input type="textarea" class="input-content"  :autosize="{ minRows: 3, maxRows: 8}" v-model="curDetail.intro" style="width: 500px;"></el-input>
         </el-form-item>
         <el-form-item label="详情：" prop="content">
-          <!-- <Editor ref="formEditor" :initalValue="curDetail.initalContent" v-model="curDetail.content" @input="editorChange"></Editor> -->
-          <YEditor v-model="curDetail.initalContent"></YEditor>
+          <YEditor :initalValue="curDetail.initalContent"  v-model="curDetail.content"  @input="editorChange"></YEditor>
         </el-form-item>
         
       </el-form>
