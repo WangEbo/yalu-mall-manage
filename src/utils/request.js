@@ -3,9 +3,15 @@ import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 
+debugger
+let baseURL = '/';
+if(location.pathname.indexOf('admin') > -1){
+  baseURL = '/admin'
+}
+
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api的base_url
+  baseURL, // api的base_url
   timeout: 15000, // 请求超时时间
   headers: {}
 })
