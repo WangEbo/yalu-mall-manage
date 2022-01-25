@@ -6,7 +6,7 @@
       <div class="right-box">
         <span class="avatar-name">{{name}}</span>
         <div class="avatar-wrapper">
-          <img class="user-avatar" :src="avatar">
+          <!-- <img class="user-avatar" :src="avatar"> -->
           <i class="el-icon-caret-bottom"></i>
         </div>
       </div>
@@ -79,31 +79,32 @@ export default {
     display: inline-block;
     position: absolute;
     right: 35px;
-    .avatar-name{
+    .right-box{
       height: 100%;
       line-height: 50px;
-      vertical-align: middle;
-      display: inline-block;
-      margin-right: 8px;
-      margin-bottom: 26px;
-    }
-    .avatar-wrapper {
-      display: inline-block;
       cursor: pointer;
-      margin-top: 5px;
-      position: relative;
-      .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+      .avatar-name{
+        height: 100%;
+        line-height: 50px;
+        vertical-align: middle;
+        display: inline-block;
+        margin-right: 8px;
       }
-      .el-icon-caret-bottom {
-        position: absolute;
-        right: -20px;
-        top: 25px;
-        font-size: 12px;
+      .avatar-wrapper {
+        display: inline-block;
+        cursor: pointer;
+        position: relative;
+        .user-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
+        .el-icon-caret-bottom {
+          font-size: 12px;
+        }
       }
     }
+    
   }
 }
 
