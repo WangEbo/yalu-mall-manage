@@ -198,12 +198,10 @@
   import {
     fetchList,
     updateDeleteStatus,
-    updateNewStatus,
     updateRecommendStatus,
-    updatePublishStatus
+    updateProduct
   } from '@/api/product'
   import {fetchListWithChildren} from '@/api/productCate'
-  import { updateProduct } from '@/api/product';
 
   const defaultListQuery = {
     keyword: null,
@@ -368,27 +366,27 @@
             ids.push(this.multipleSelection[i].id);
           }
           switch (this.operateType) {
+            // case this.operates[0].value:
+            //   this.updatePublishStatus(1,ids);
+            //   break;
+            // case this.operates[1].value:
+            //   this.updatePublishStatus(0,ids);
+            //   break;
             case this.operates[0].value:
-              this.updatePublishStatus(1,ids);
-              break;
-            case this.operates[1].value:
-              this.updatePublishStatus(0,ids);
-              break;
-            case this.operates[2].value:
               this.updateRecommendStatus(1,ids);
               break;
-            case this.operates[3].value:
+            case this.operates[1].value:
               this.updateRecommendStatus(0,ids);
               break;
-            case this.operates[4].value:
-              this.updateNewStatus(1,ids);
-              break;
-            case this.operates[5].value:
-              this.updateNewStatus(0,ids);
-              break;
-            case this.operates[6].value:
-              break;
-            case this.operates[7].value:
+            // case this.operates[4].value:
+            //   this.updateNewStatus(1,ids);
+            //   break;
+            // case this.operates[5].value:
+            //   this.updateNewStatus(0,ids);
+            //   break;
+            // case this.operates[2].value:
+            //   break;
+            case this.operates[2].value:
               this.updateDeleteStatus(1,ids);
               break;
             default:
@@ -467,18 +465,18 @@
       //     });
       //   });
       // },
-      // updateRecommendStatus(recommendStatus, ids) {
-      //   let params = new URLSearchParams();
-      //   params.append('ids', ids);
-      //   params.append('recommendStatus', recommendStatus);
-      //   updateRecommendStatus(params).then(response => {
-      //     this.$message({
-      //       message: '修改成功',
-      //       type: 'success',
-      //       duration: 1000
-      //     });
-      //   });
-      // },
+      updateRecommendStatus(recommendStatus, ids) {
+        let params = new URLSearchParams();
+        params.append('ids', ids);
+        params.append('recommendStatus', recommendStatus);
+        updateRecommendStatus(params).then(response => {
+          this.$message({
+            message: '修改成功',
+            type: 'success',
+            duration: 1000
+          });
+        });
+      },
       updateDeleteStatus(deleteStatus, ids) {
         let params = new URLSearchParams();
         params.append('ids', ids);

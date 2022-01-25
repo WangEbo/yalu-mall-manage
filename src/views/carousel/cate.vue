@@ -198,7 +198,7 @@ export default {
       })
     },
 
-    handleStatusChange() {
+    handleStatusChange(index, row) {
       let params = {
         status: row.status,
       }

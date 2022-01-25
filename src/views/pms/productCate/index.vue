@@ -36,7 +36,7 @@
         <!-- <el-table-column label="数量单位" width="100" align="center">
           <template slot-scope="scope">{{scope.row.productUnit }}</template>
         </el-table-column> -->
-        <el-table-column label="导航栏" width="100" align="center">
+        <!-- <el-table-column label="导航栏" width="100" align="center">
           <template slot-scope="scope">
             <el-switch
               @change="handleNavStatusChange(scope.$index, scope.row)"
@@ -55,11 +55,11 @@
               v-model="scope.row.showStatus">
             </el-switch>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="排序" width="100" align="center">
           <template slot-scope="scope">{{scope.row.sort }}</template>
         </el-table-column>
-        <el-table-column label="设置" width="200" align="center">
+        <el-table-column label="设置" width="200"  v-if="parentIdStack.length == 1" align="center">
           <template slot-scope="scope">
             <el-button
               v-show="parentIdStack.length == 1"
@@ -76,6 +76,7 @@
         <el-table-column label="操作" width="280" align="center">
           <template slot-scope="scope">
             <el-button
+              v-show="parentIdStack.length == 1"
               size="mini"
               type="primary"
               @click="openCarouselDailog(scope.$index, scope.row)">设为轮播

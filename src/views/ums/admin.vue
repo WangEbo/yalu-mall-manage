@@ -51,9 +51,9 @@
         <el-table-column label="添加时间" width="160" align="center">
           <template slot-scope="scope">{{scope.row.createTime | formatDateTime}}</template>
         </el-table-column>
-        <el-table-column label="最后登录" width="160" align="center">
+        <!-- <el-table-column label="最后登录" width="160" align="center">
           <template slot-scope="scope">{{scope.row.loginTime | formatDateTime}}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="是否启用" width="140" align="center">
           <template slot-scope="scope">
             <el-switch

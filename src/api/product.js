@@ -19,7 +19,10 @@ export function updateDeleteStatus(params) {
   return request({
     url:'/product/batch/delete',
     method:'post',
-    params:params
+    params:params,
+    headers: {
+      'content-type' : 'application/x-www-form-urlencoded'
+    }
   })
 }
 
@@ -33,9 +36,12 @@ export function updateNewStatus(params) {
 
 export function updateRecommendStatus(params) {
   return request({
-    url:'/product/update/recommendStatus',
+    url:'/product/batch/recommend-status',
     method:'post',
-    params:params
+    params:params,
+    headers: {
+      'content-type' : 'application/x-www-form-urlencoded'
+    }
   })
 }
 
