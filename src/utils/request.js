@@ -5,9 +5,9 @@ import { getToken } from '@/utils/auth'
 
 
 let baseURL = '/';
-if(location.pathname.indexOf('admin') > -1 || location.pathname.indexOf('yalu-manager') > -1){
-  baseURL = '/admin'
-}
+// if(location.pathname.indexOf('admin') > -1 || location.pathname.indexOf('yalu-manager') > -1){
+//   baseURL = '/admin'
+// }
 
 // 创建axios实例
 const service = axios.create({
