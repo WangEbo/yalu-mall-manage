@@ -139,7 +139,7 @@ export default {
     }
   },
   created(){
-    this.getDetail()
+    // this.getDetail()
   },
   mounted(){
 
@@ -147,7 +147,9 @@ export default {
   methods: {
     getDetail(){
       getSetting().then(res=> {
-        this.$set(this, 'detail', res.data)
+        if(res.data && Object.keys(res.data).length){
+          this.$set(this, 'detail', res.data)
+        }
       })
     },
     edit(){

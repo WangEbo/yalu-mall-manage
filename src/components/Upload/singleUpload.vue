@@ -43,7 +43,7 @@
   }
 
   let baseURL = process.env.BASE_API;
-  if(location.pathname.indexOf('admin') > -1){
+  if(location.pathname.indexOf('admin') > -1 || location.pathname.indexOf('yalu-manager')){
     baseURL = '/admin'
   }
   export default {

@@ -66,6 +66,7 @@ export default {
     height: 50px;
     float: left;
     padding: 0 10px;
+    display: none;
   }
   .screenfull {
     position: absolute;
