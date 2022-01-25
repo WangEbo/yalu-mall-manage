@@ -3,7 +3,7 @@ import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 
-debugger
+
 let baseURL = '/';
 if(location.pathname.indexOf('admin') > -1){
   baseURL = '/admin'
