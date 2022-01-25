@@ -3,17 +3,19 @@
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" trigger="click">
-      <span class="avatar-name">{{name}}</span>
-      <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar">
-        <i class="el-icon-caret-bottom"></i>
+      <div class="right-box">
+        <span class="avatar-name">{{name}}</span>
+        <div class="avatar-wrapper">
+          <img class="user-avatar" :src="avatar">
+          <i class="el-icon-caret-bottom"></i>
+        </div>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class="inlineBlock" to="/">
+        <!-- <router-link class="inlineBlock" to="/">
           <el-dropdown-item>
             首页
           </el-dropdown-item>
-        </router-link>
+        </router-link> -->
         <el-dropdown-item divided>
           <span @click="logout" style="display:block;">退出</span>
         </el-dropdown-item>
@@ -78,10 +80,11 @@ export default {
     right: 35px;
     .avatar-name{
       height: 100%;
-      line-height: 1;
+      line-height: 50px;
       vertical-align: middle;
       display: inline-block;
       margin-right: 8px;
+      margin-bottom: 26px;
     }
     .avatar-wrapper {
       display: inline-block;
@@ -102,5 +105,6 @@ export default {
     }
   }
 }
+
 </style>
 

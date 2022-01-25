@@ -42,7 +42,10 @@
     }
   }
 
-  const BASE_API = process.env.BASE_API;
+  let baseURL = process.env.BASE_API;
+  if(location.pathname.indexOf('admin') > -1){
+    baseURL = '/admin'
+  }
   export default {
     name: 'singleUpload',
     props: {
@@ -91,7 +94,7 @@
         dialogVisible: false,
         useOss: false, //使用oss->true;使用MinIO->false
         ossUploadUrl: 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
-        minioUploadUrl: BASE_API + 'minio/upload',
+        minioUploadUrl: baseURL + 'minio/upload',
         
       };
     },

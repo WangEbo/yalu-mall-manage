@@ -172,7 +172,6 @@
     },
     created() {
       this.getList();
-      this.getAllRoleList();
     },
     filters: {
       formatDateTime(time) {

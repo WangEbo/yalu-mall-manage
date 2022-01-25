@@ -21,17 +21,17 @@ import Layout from '../views/layout/Layout'
 export const constantRouterMap = [
   { path: '/login', component: () => import('@/views/login/index'), hidden: true },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
-  {
-    path: '',
-    component: Layout,
-    redirect: '/home',
-    children: [{
-      path: 'home',
-      name: 'home',
-      component: () => import('@/views/home/index'),
-      meta: { title: '首页', icon: 'home' }
-    }]
-  }
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   redirect: '/home',
+  //   children: [{
+  //     path: 'home',
+  //     name: 'home',
+  //     component: () => import('@/views/home/index'),
+  //     meta: { title: '首页', icon: 'home' }
+  //   }]
+  // }
 ]
 
 //超管独有路由
@@ -54,6 +54,21 @@ export const constantRouterMap = [
 //其他异步路由
 export const asyncRouterMap = [
   {
+    path: '/set',
+    component: Layout,
+    redirect: '/set/universal',
+    name: 'set',
+    meta: { title: '通用设置', icon: 'set' },
+    children: [
+      {
+        path: 'universal',
+        name: 'set-universal',
+        component: () => import('@/views/set/universal'),
+        meta: { title: '通用设置', icon: 'set-universal' }
+      },
+    ]
+  },
+  {
     path: '/ums',
     component: Layout,
     redirect: '/ums/admin',
@@ -69,22 +84,6 @@ export const asyncRouterMap = [
     ]
   },
 
-
-  {
-    path: '/set',
-    component: Layout,
-    redirect: '/set/universal',
-    name: 'set',
-    meta: { title: '通用设置', icon: 'set' },
-    children: [
-      {
-        path: 'universal',
-        name: 'set-universal',
-        component: () => import('@/views/set/universal'),
-        meta: { title: '通用设置', icon: 'set-universal' }
-      },
-    ]
-  },
 
 
   {
@@ -202,7 +201,8 @@ export const asyncRouterMap = [
     ]
   },
 
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true },
+  { path: '/', redirect: '/set/universal' },
 ]
 
 export default new Router({

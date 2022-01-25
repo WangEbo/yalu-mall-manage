@@ -64,15 +64,25 @@
 import SingleUpload from '@/components/Upload/singleUpload'
 import { getSetting, setSetting } from '../../api/set'
 
+const detaultDetail = {
+  logo: null,
+  teamOrderInfo: null,
+  qq: null,
+  zipCode: null,
+  workingTime: null,
+  telephone: null,
+  address: null,
+  campusHire: null,
+  shoppingPlatforms: [{name: '', value: ''}],
+  weiboLink: null,
+  wechatQr: null,
+}
+
 export default {
   components: {SingleUpload },
   data(){
     return {
-      detail: {
-        shoppingPlatform: [
-          {name: '', value: ''}
-        ]
-      },
+      detail: Object.assign({}, detaultDetail),
       shopPlatRule: {
         name: [
           {required: true, trigger: 'blur', message: '请输入平台名称',},
