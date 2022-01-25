@@ -139,7 +139,7 @@ export default {
     }
   },
   created(){
-    // this.getDetail()
+    this.getDetail()
   },
   mounted(){
 
