@@ -43,8 +43,8 @@
   }
 
   let baseURL = process.env.BASE_API;
-  if(location.pathname.indexOf('admin') > -1 || location.pathname.indexOf('yalu-manager')){
-    baseURL = '/admin'
+  if(location.pathname.indexOf('admin') > -1 || location.pathname.indexOf('yalu-manager') > -1){
+    baseURL = '/admin/'
   }
   export default {
     name: 'singleUpload',
