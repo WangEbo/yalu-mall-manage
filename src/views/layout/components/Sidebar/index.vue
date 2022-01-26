@@ -1,5 +1,9 @@
 <template>
   <scroll-bar>
+    <div class="logo-img">
+      <img :src="logo" height="50px" alt="">
+    </div>
+    <!-- <h3 class="h3-title">雅鹿后台管理系统</h3> -->
     <el-menu
       mode="vertical"
       :show-timeout="200"
@@ -18,9 +22,15 @@
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import ScrollBar from '@/components/ScrollBar'
+import { getSetting } from '@/api/set'
 
 export default {
   components: { SidebarItem, ScrollBar },
+  data(){
+    return {
+      logo: ''
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
@@ -32,7 +42,39 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
+    },
+    
+  },
+  created(){
+    this.getSetting()
+  },
+  methods:{
+    getSetting(){
+      getSetting().then(res=> {
+        if(res.data && Object.keys(res.data).length){
+          this.logo = res.data.logo
+        }
+      })
     }
+    
   }
 }
 </script>
+
+<style>
+.logo-img{
+  padding: 10px 20px;
+  margin-bottom: 30px;
+}
+.logo-img img{
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.h3-title{
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  margin: 15px 0 30px;
+}
+</style>
