@@ -57,3 +57,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .el-menu-item:hover, .el-submenu__title:hover{
+    background-color: #ecf5ff!important;
+  }
+</style>

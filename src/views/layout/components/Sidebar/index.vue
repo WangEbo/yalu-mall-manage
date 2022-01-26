@@ -1,7 +1,7 @@
 <template>
   <scroll-bar>
     <div class="logo-img">
-      <img :src="logo" height="50px" alt="">
+      <img :src="logo" alt="">
     </div>
     <!-- <h3 class="h3-title">雅鹿后台管理系统</h3> -->
     <el-menu
@@ -9,8 +9,8 @@
       :show-timeout="200"
       :default-active="$route.path"
       :collapse="isCollapse"
-      background-color="#304156"
-      text-color="#bfcbd9"
+      :background-color="'#ffffff'"
+      text-color="#1e1e1e"
       active-text-color="#409EFF"
     >
       <sidebar-item :routes="routes"></sidebar-item>
@@ -41,7 +41,7 @@ export default {
       return this.routers
     },
     isCollapse() {
-      return !this.sidebar.opened
+      return false
     },
     
   },
@@ -63,13 +63,16 @@ export default {
 
 <style>
 .logo-img{
-  padding: 10px 20px;
+  padding-left: 10px;
   margin-bottom: 30px;
+  height: 50px;
+  line-height: 50px;
 }
 .logo-img img{
-  display: block;
-  width: 100%;
+  display: inline-block;
   height: auto;
+  width: 60%;
+  vertical-align: middle;
 }
 .h3-title{
   color: #fff;
