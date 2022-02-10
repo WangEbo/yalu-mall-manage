@@ -106,8 +106,21 @@
         while(parent){
           if(parent.$options.componentName == 'ElFormItem'){
             validateField = parent.prop
+            console.log(parent.prop);
           }
           if(parent.$options.componentName == 'ElForm' && validateField && parent.rules[validateField]){
+            let fileRule = parent.rules[validateField];
+            if(!fileRule.some(item=> item.validator)){//添加空格字符校验   此处可自定义为文件formItem添加校验项
+              fileRule.push({
+                validator: (rule, value, callback) => {
+                  if (/\s/.test(value) == true) {
+                    callback(new Error("文件名含有空格，请检查"));
+                  } else {
+                    callback();
+                  }
+                }
+              })
+            }
             parent.validateField(validateField)
             return
           }

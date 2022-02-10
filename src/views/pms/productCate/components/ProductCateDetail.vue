@@ -8,7 +8,7 @@
         <el-input v-model="productCate.name"></el-input>
       </el-form-item>
       <el-form-item label="上级分类：" >
-        <el-select v-model="productCate.parentId" placeholder="请选择分类">
+        <el-select :disabled="isEdit" v-model="productCate.parentId" placeholder="请选择分类">
           <el-option
             v-for="item in selectProductCateList"
             :key="item.id"
@@ -26,7 +26,7 @@
       <el-form-item label="排序：">
         <el-input v-model="productCate.sort"></el-input>
       </el-form-item>
-      <el-form-item label="是否显示：">
+      <!-- <el-form-item label="是否显示：">
         <el-radio-group v-model="productCate.showStatus">
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
@@ -37,7 +37,7 @@
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="分类图标：">
         <single-upload v-model="productCate.icon"></single-upload>
       </el-form-item> -->
@@ -106,20 +106,25 @@
       }
     },
     computed: {
-      rules(){
-        let rules = {
-          name: [
-            {required: true, message: '请输入品牌名称', trigger: 'blur'},
-            {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
-          ]
-        }
+      rules:{
+        set(){
 
-        if(!this.productCate.parentId){
-          rules.coverImg = [
-            {required: true, message: '你添加的为一级分类，请上传封面图', trigger: 'blur'},
-          ]
+        },
+        get(){
+          let rules = {
+            name: [
+              {required: true, message: '请输入品牌名称', trigger: 'blur'},
+              {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
+            ]
+          }
+
+          if(!this.productCate.parentId){
+            rules.coverImg = [
+              {required: true, message: '你添加的为一级分类，请上传封面图', trigger: 'blur'},
+            ]
+          }
+          return rules
         }
-        return rules
       }
     },
     created() {
