@@ -110,17 +110,17 @@
           }
           if(parent.$options.componentName == 'ElForm' && validateField && parent.rules[validateField]){
             let fileRule = parent.rules[validateField];
-            if(!fileRule.some(item=> item.validator)){//添加空格字符校验   此处可自定义为文件formItem添加校验项
-              fileRule.push({
-                validator: (rule, value, callback) => {
-                  if (/\s/.test(value) == true) {
-                    callback(new Error("文件名含有空格，请检查"));
-                  } else {
-                    callback();
-                  }
-                }
-              })
-            }
+            // if(!fileRule.some(item=> item.validator)){//添加空格字符校验   此处可自定义为文件formItem添加校验项
+            //   fileRule.push({
+            //     validator: (rule, value, callback) => {
+            //       if (/\s/.test(value) == true) {
+            //         callback(new Error("文件名含有空格，请检查"));
+            //       } else {
+            //         callback();
+            //       }
+            //     }
+            //   })
+            // }
             parent.validateField(validateField)
             return
           }
@@ -140,6 +140,8 @@
         }
         var xhr = new XMLHttpRequest();
         var action = option.action;
+        let curFile = option.file;
+        option.file = new File([curFile], curFile.name.replace(/\s/g, '')); 
 
         if (xhr.upload) {
           xhr.upload.onprogress = function progress(e) {
@@ -194,25 +196,27 @@
       },
       beforeUpload(file) {
         let _self = this;
+        // file.name = file.name.replace(/\s/g, '');
         if(!this.useOss){
           //不使用oss不需要获取策略
           return true;
         }
-        return new Promise((resolve, reject) => {
-          policy().then(response => {
-            _self.dataObj.policy = response.data.policy;
-            _self.dataObj.signature = response.data.signature;
-            _self.dataObj.ossaccessKeyId = response.data.accessKeyId;
-            _self.dataObj.key = response.data.dir + '/${filename}';
-            _self.dataObj.dir = response.data.dir;
-            _self.dataObj.host = response.data.host;
-            // _self.dataObj.callback = response.data.callback;
-            resolve(true)
-          }).catch(err => {
-            console.log(err)
-            reject(false)
-          })
-        })
+        console.log(file);
+        // return new Promise((resolve, reject) => {
+        //   policy().then(response => {
+        //     _self.dataObj.policy = response.data.policy;
+        //     _self.dataObj.signature = response.data.signature;
+        //     _self.dataObj.ossaccessKeyId = response.data.accessKeyId;
+        //     _self.dataObj.key = response.data.dir + '/${filename}';
+        //     _self.dataObj.dir = response.data.dir;
+        //     _self.dataObj.host = response.data.host;
+        //     // _self.dataObj.callback = response.data.callback;
+        //     resolve(true)
+        //   }).catch(err => {
+        //     console.log(err)
+        //     reject(false)
+        //   })
+        // })
       },
       handleUploadSuccess(res, file) {
         this.showFileList = true;
