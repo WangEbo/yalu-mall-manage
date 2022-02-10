@@ -6,6 +6,7 @@
       哈哈哈哈
     </div>
     <input type="file" @change="updateImg($event)" id="imgData" style="display: none;">
+    <input id="uploadVideo" type="file" style="display:none" accept="video/*" @change="uploadVideo">
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import "quill/dist/quill.snow.css";
 import Quill from "quill";
 
 var BlockEmbed = Quill.import('blots/block/embed')
+//添加image类型blot
 class ImageBlot extends BlockEmbed {
   static create(value) {
     let node = super.create();
@@ -37,9 +39,38 @@ class ImageBlot extends BlockEmbed {
     }
   }
 }
+//注册image类型blot
 ImageBlot.blotName = 'image';
 ImageBlot.tagName = 'img';
 Quill.register(ImageBlot)
+
+//添加video类型blot
+class VideoBlot extends BlockEmbed {
+  static create (value) {
+    let node = super.create()
+    node.setAttribute('src', value.url)
+    node.setAttribute('controls', value.controls)
+    node.setAttribute('width', value.width)
+    node.setAttribute('height', value.height)
+    node.setAttribute('webkit-playsinline', true)
+    node.setAttribute('playsinline', true)
+    node.setAttribute('x5-playsinline', true)
+    return node;
+  }
+ 
+  static value (node) {
+    return {
+      url: node.getAttribute('src'),
+      controls: node.getAttribute('controls'),
+      width: node.getAttribute('width'),
+      height: node.getAttribute('height')
+    };
+  }
+}
+//注册video类型blot
+VideoBlot.blotName = 'simpleVideo'
+VideoBlot.tagName = 'video'
+Quill.register(VideoBlot)
 import request from '@/utils/request'
 
 let quill;
@@ -93,7 +124,7 @@ export default {
         [{ 'align': [] }],
         ['clean'], //移除格式化
         ['image'],
-        // ['video'],
+        ['video'],
         // ['formula'] //需要加载cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js
       ];
 
@@ -136,14 +167,17 @@ export default {
       toolbar.addHandler('image', () => {
         document.getElementById('imgData').click();
       });
-
+      toolbar.addHandler("video", ()=> {
+        document.getElementById('uploadVideo').click();
+      })
 
     },
     updateImg(e) {
       let fileInput = e.target;
       let file = fileInput.files[0];
+      let filterFile = new File([file], file.name.replace(/\s/g, '')); 
       var formData = new FormData();
-      formData.append('file', file);        //追加的自定义节点，第一个参数：php用$_FILES接收时的key；第2个参数：当前图片
+      formData.append('file', filterFile);        //追加的自定义节点，第一个参数：php用$_FILES接收时的key；第2个参数：当前图片
       console.log(formData.get("avatar"));    //打印当前图片的信息
 
       request({
@@ -169,6 +203,40 @@ export default {
               height:'auto'
             }
           ); //将上传好的图片，插入到富文本的range.index（当前光标处）
+          const dt = new DataTransfer();
+          fileInput.files = dt.files
+        }
+      })
+    },
+    uploadVideo(e) {
+      let fileInput = e.target;
+      let file = fileInput.files[0];
+      var formData = new FormData();
+       let filterFile = new File([file], file.name.replace(/\s/g, '')); 
+      var formData = new FormData();
+      formData.append('file', filterFile);        //追加的自定义节点，第一个参数：php用$_FILES接收时的key；第2个参数：当前图片
+
+      request({
+        url: '/minio/upload',
+        method: 'post',
+        data: formData,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).then(res=> {
+        const range = quill.getSelection();
+        if (range) {
+          let attrs = {
+            with: '100%',
+            height: 'auto',
+            ...res.data
+          }
+          quill.insertEmbed(range.index, 'simpleVideo', {
+            url: 'http://8.143.199.43' + res.data.url,
+            controls: 'controls',
+            width: '100%',
+            height: '100%'
+          }) //将上传好的图片，插入到富文本的range.index（当前光标处）
           const dt = new DataTransfer();
           fileInput.files = dt.files
         }
