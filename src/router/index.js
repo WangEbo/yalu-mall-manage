@@ -85,7 +85,7 @@ export const asyncRouterMap = [
   },
 
 
-
+//信息
   {
     path: '/info',
     component: Layout,
@@ -117,10 +117,16 @@ export const asyncRouterMap = [
         component: () => import('@/views/info/news/index'),
         meta: { title: '资讯管理', icon: 'info-news' }
       },
+      {
+        path: 'image',
+        name: 'info-image',
+        component: () => import('@/views/info/storeImage/index'),
+        meta: { title: '品牌概况', icon: 'info-store' }
+      },
     ]
   },
 
-
+//商品
   {
     path: '/pms',
     component: Layout,

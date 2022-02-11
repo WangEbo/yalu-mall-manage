@@ -211,6 +211,11 @@ export default {
     uploadVideo(e) {
       let fileInput = e.target;
       let file = fileInput.files[0];
+      console.log(file.size);
+      if(file.size > 1024 * 1024 * 50){
+        this.$message.error('上传文件不可大于50M!')
+        return
+      }
       var formData = new FormData();
        let filterFile = new File([file], file.name.replace(/\s/g, '')); 
       var formData = new FormData();

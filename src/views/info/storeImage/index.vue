@@ -1,6 +1,6 @@
 <template>
-  <!-- 品牌历程 -->
-  <div class="app-container brand">
+  <!-- 概况 -->
+  <div class="app-container">
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -15,7 +15,7 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="输入搜索：">
-            <el-input v-model="listQuery.keyword" @keydown.native.enter="handleSearchList" class="input-width" placeholder="请输入关键词" clearable></el-input>
+            <el-input v-model="listQuery.keyword"  @keydown.native.enter="handleSearchList" class="input-width" placeholder="请输入关键词" clearable></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -27,11 +27,14 @@
     </el-card>
     <div class="table-container">
       <el-table ref="adminTable" :data="list" style="width: 100%;" v-loading="listLoading" border>
-        <el-table-column label="事件时间" align="center" width="200" >
-          <template slot-scope="scope">{{scope.row.eventTime}}</template>
+        <el-table-column label="标题" width="200" align="center">
+          <template slot-scope="scope">{{scope.row.title}}</template>
         </el-table-column>
-        <el-table-column label="事件内容" align="center" :show-overflow-tooltip="true">
-          <template slot-scope="scope">{{scope.row.eventContent}}</template>
+        <el-table-column label="图片" align="center" width="300">
+          <template style="white-space: nowrap;" slot-scope="scope"><img height="50px" :src="scope.row.imgUrl" alt=""></template>
+        </el-table-column>
+        <el-table-column label="内容" align="center" :show-overflow-tooltip="true">
+          <template slot-scope="scope">{{scope.row.content}}</template>
         </el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
@@ -48,21 +51,19 @@
       <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" layout="total, sizes,prev, pager, next,jumper" :current-page.sync="listQuery.pageNum" :page-size="listQuery.pageSize" :page-sizes="[10,15,20]" :total="total">
       </el-pagination>
     </div>
-    <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑历程':'添加历程'" :visible.sync="dialogVisible" width="900">
+    <el-dialog :close-on-click-modal="false" :title="isEdit?'编辑概况':'添加概况'" :visible.sync="dialogVisible" width="900">
       <el-form :model="curDetail" ref="mainForm" :rules="formRules" label-width="150px" size="small">
-        <el-form-item label="事件时间：" prop="eventTime">
-          <el-date-picker
-            v-model="curDetail.eventTime"
-            type="month"
-            value-format="yyyy-MM"
-            placeholder="选择事件时间">
-          </el-date-picker>
+        <el-form-item label="标题：" prop="title">
+          <el-input v-model="curDetail.title" style="width: 250px"></el-input>
         </el-form-item>
-        <el-form-item label="事件内容：" prop="eventContent">
-          <el-input type="textarea" class="input-content"  :autosize="{ minRows: 8, maxRows: 8}" v-model="curDetail.eventContent" style="width: 500px;"></el-input>
+        <el-form-item label="图片：" prop="imgUrl" :class="[]">
+          <single-upload v-model="curDetail.imgUrl" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+        </el-form-item>
+        <el-form-item label="内容：" prop="content">
+          <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 8}" class="input-content"  v-model="curDetail.content" style="width: 500px;"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer" class="dialog-footer" >
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
         <el-button type="primary" @click="handleDialogConfirm()" size="small">确 定</el-button>
       </span>
@@ -73,7 +74,7 @@
 <script>
 import SingleUpload from '@/components/Upload/singleUpload'
 
-import { addHistory, delHistory, historyList, updateHistory, getHistoryById, } from '@/api/history'
+import { addStoreImage, delStoreImage, storeImageList, updateStoreImage, getStoreImageById, } from '@/api/storeImage'
 import { formatDate } from '@/utils/date';
 
 const defaultListQuery = {
@@ -81,9 +82,10 @@ const defaultListQuery = {
   pageSize: 10,
   keyword: null
 };
-const defaultHistory = {
-  eventTime: null,
-  eventContent: null,
+const defaultOverview = {
+  title: null,
+  imgUrl: null,
+  content: null,
 };
 export default {
   name: 'adminList',
@@ -98,11 +100,14 @@ export default {
       isEdit: false,
       dataList: [],
       formDisabled: true,
-      curDetail: defaultHistory,
+      curDetail: defaultOverview,
       formRules: {
-        eventTime:  {required: true, trigger: 'blur', message: '请输入事件时间'},
-        eventContent:  [
-          {required: true, trigger: 'blur', message: '请输入事件内容'},
+        title:  {required: true, trigger: 'blur', message: '请输入标题'},
+        imgUrl: [
+          {required: true, message: '请输入商品名称', trigger: 'blur'},
+        ],
+        content:  [
+          {required: true, trigger: 'blur', message: '请输内容'},
           {min: 2, max: 5000, message: '长度在 2 到 5000 个字符', trigger: 'blur'}
         ]
       }
@@ -138,20 +143,20 @@ export default {
       this.getList();
     },
     handleAdd() {
-      this.dialogVisible = true;
       this.isEdit = false;
-      this.curDetail = Object.assign({}, defaultHistory);
+      this.curDetail = Object.assign({}, defaultOverview);
+      this.dialogVisible = true;
       this.$nextTick(()=> {
         this.$refs.mainForm.clearValidate()
       })
     },
     handleDelete(index, row) {
-      this.$confirm('是否要删除该用户?', '提示', {
+      this.$confirm('是否要删除该条品牌概况?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delHistory(row.id).then(response => {
+        delStoreImage(row.id).then(response => {
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -163,7 +168,7 @@ export default {
     handleUpdate(index, row) {
       this.dialogVisible = true;
       this.isEdit = true;
-      this.curDetail = Object.assign({}, row);
+      this.curDetail = row;
       this.$nextTick(()=> {
         this.$refs.mainForm.clearValidate()
       })
@@ -177,7 +182,7 @@ export default {
             type: 'warning'
           }).then(() => {
             if (this.isEdit) {
-              updateHistory(this.curDetail.id, this.curDetail).then(response => {
+              updateStoreImage(this.curDetail.id, this.curDetail).then(response => {
                 this.$message({
                   message: '修改成功！',
                   type: 'success'
@@ -186,7 +191,7 @@ export default {
                 this.getList();
               })
             } else {
-              addHistory(this.curDetail).then(response => {
+              addStoreImage(this.curDetail).then(response => {
                 this.$message({
                   message: '添加成功！',
                   type: 'success'
@@ -201,10 +206,10 @@ export default {
     },
     getList() {
       this.listLoading = true;
-      historyList(this.listQuery).then(response => {
+      storeImageList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data.list;
-        this.total = response.data.total
+        this.total = response.data.length;
       });
     },
   }
@@ -212,5 +217,4 @@ export default {
 </script>
 
 <style lang="scss">
-
 </style>

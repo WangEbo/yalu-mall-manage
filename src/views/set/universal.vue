@@ -1,7 +1,7 @@
 <template>
   <!-- 通用设置 -->
   <div class="app-container">
-    <el-form class="setting-form" :model="detail" :rules="rules" ref="settingForm" :disabled="formDisabled" label-width="120px" style="width: 600px" size="small">
+    <el-form class="setting-form" :model="detail" :rules="rules" ref="settingForm" :disabled="formDisabled" label-width="160px" style="width: 600px" size="small">
       <el-form-item label="logo：" prop="logo" :class="[formDisabled ? 'form-item-logo-disabled' : 'form-item-logo']">
         <single-upload v-model="detail.logo" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
       </el-form-item>
@@ -52,6 +52,16 @@
         <!-- <el-input v-model="detail.weight" style="width: 300px"></el-input>
         <span style="margin-left: 20px">克</span> -->
       </el-form-item>
+      <el-form-item label="品牌视频：" prop="brandVideo" :class="[]">
+        <single-upload v-model="detail.brandVideo" type="video" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+      </el-form-item>
+      <el-form-item label="商品统一宣传视频：" prop="goodsVideo" :class="[]">
+        <single-upload v-model="detail.goodsVideo" type="video" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+      </el-form-item>
+      
+      <el-form-item label="第四导航文案：" prop="fourthNavName">
+        <el-input v-model="detail.fourthNavName"></el-input>
+      </el-form-item>
     </el-form>
     <div class="opt-btns">
       <el-button v-show="formDisabled" @click.stop="formDisabled = false" type="primary" >编辑</el-button>
@@ -63,7 +73,6 @@
 <script>
 import SingleUpload from '@/components/Upload/singleUpload'
 import { getSetting, setSetting } from '../../api/set'
-
 const detaultDetail = {
   logo: null,
   teamOrderInfo: null,
@@ -76,6 +85,9 @@ const detaultDetail = {
   shoppingPlatforms: [{name: '', value: ''}],
   weiboLink: null,
   wechatQr: null,
+  fourthNavName: null,
+  goodsVideo: null,
+  brandVideo: null,
 }
 
 export default {
@@ -148,7 +160,7 @@ export default {
     getDetail(){
       getSetting().then(res=> {
         if(res.data && Object.keys(res.data).length){
-          this.$set(this, 'detail', res.data)
+          this.$set(this, 'detail', Object.assign({}, this.detail, res.data))
         }
       })
     },

@@ -1,6 +1,6 @@
 <template> 
   <div :class="['s-upload', disabled ? 'disabled' : '']">
-    <el-upload
+    <ElUpload
       :action="useOss?ossUploadUrl:minioUploadUrl"
       :data="useOss?dataObj:null"
       list-type="picture"
@@ -12,12 +12,14 @@
       :on-success="handleUploadSuccess"
       :http-request="httpRequest"
       :disabled="disabled"
+      :accept="accept"
       :on-preview="handlePreview">
       <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10MB</div>
-    </el-upload>
+      <div slot="tip" class="el-upload__tip">只能上传{{acceptFileType[type]}}文件，且不超过{{acceptSize[type]}}MB</div>
+    </ElUpload>
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="fileList[0].url" alt="">
+      <img v-if="type=='img'" width="100%" :src="fileList[0].url" alt="">
+      <video controls v-else-if="type=='video'" width="100%"  :src="fileList[0].url"></video>
     </el-dialog>
   </div>
 </template>
@@ -46,6 +48,16 @@
   // if(location.pathname.indexOf('admin') > -1 || location.pathname.indexOf('yalu-manager') > -1){
   //   baseURL = '/admin/'
   // }
+  export const acceptFileType = {
+    img: '.jpg,.png,.jpeg',
+    video: '.mp4,.MPEG4',
+  }
+
+  export const acceptSize = {
+    img: 10,
+    video: 50,
+  } 
+
   export default {
     name: 'singleUpload',
     props: {
@@ -54,6 +66,10 @@
         default: false
       },
       value: String,
+      type: {
+        String,
+        default: ()=> 'img'
+      }
     },
     computed: {
       imageUrl() {
@@ -78,10 +94,18 @@
         },
         set: function (newValue) {
         }
+      },
+      accept(){
+        return this.type ? acceptFileType[this.type] : acceptFileType.img
+      },
+      fileType(){
+
       }
     },
     data() {
       return {
+        acceptFileType,
+        acceptSize,
         dataObj: {
           policy: '',
           signature: '',
@@ -95,7 +119,6 @@
         useOss: false, //使用oss->true;使用MinIO->false
         ossUploadUrl: 'http://macro-oss.oss-cn-shenzhen.aliyuncs.com',
         minioUploadUrl: baseURL + 'minio/upload',
-        
       };
     },
     methods: {
@@ -218,7 +241,24 @@
         //   })
         // })
       },
-      handleUploadSuccess(res, file) {
+      async getVideoCoverImg(url){
+        return new Promise((resolve, reject)=> {
+          let canvas = document.createElement('canvas');
+          let ctx = canvas.getContext('2d');
+          let video = document.createElement('video');
+          video.src = url;
+          video.addEventListener('loadeddata', function (e) {
+            canvas.width = this.videoWidth
+            canvas.height = this.videoHeight
+            let width = this.videoWidth
+            let height = this.videoHeight
+            ctx.drawImage(this, 0, 0, width, height);	
+            let src = canvas.toDataURL('image/jpeg');
+            resolve(src)
+          })
+        })
+      },
+      async handleUploadSuccess(res, file) {
         this.showFileList = true;
         this.fileList.pop();
         let url = this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name;
@@ -226,7 +266,11 @@
           //不使用oss直接获取图片路径
           url = res.data.url;
         }
-        this.fileList.push({name: file.name, url: url});
+        let videoCoverImg;
+        if(this.type == 'video'){
+          videoCoverImg = await this.getVideoCoverImg(url)
+        }
+        this.fileList.push({name: file.name, url: url, videoCoverImg, });
         this.emitInput(this.fileList[0].url);
       }
     }

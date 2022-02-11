@@ -20,6 +20,9 @@
       <el-form-item label="封面图片：" prop="coverImg" :class="[]" v-show="!productCate.parentId">
         <single-upload v-model="productCate.coverImg" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
       </el-form-item>
+      <el-form-item label="宣传视频：" prop="videoUrl" :class="[]" v-show="!productCate.parentId">
+        <single-upload type="video" v-model="productCate.videoUrl" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+      </el-form-item>
       <!-- <el-form-item label="数量单位：">
         <el-input v-model="productCate.productUnit"></el-input>
       </el-form-item> -->
@@ -87,6 +90,7 @@
     showStatus: 0,
     sort: 0,
     coverImg: '',
+    videoUrl: '',
     // productAttributeIdList: []
   };
   export default {
@@ -115,7 +119,8 @@
             name: [
               {required: true, message: '请输入品牌名称', trigger: 'blur'},
               {min: 2, max: 140, message: '长度在 2 到 140 个字符', trigger: 'blur'}
-            ]
+            ],
+
           }
 
           if(!this.productCate.parentId){
