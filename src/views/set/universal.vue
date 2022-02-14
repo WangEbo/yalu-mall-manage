@@ -48,17 +48,20 @@
         <el-input v-model="detail.weiboLink"></el-input>
       </el-form-item>
       <el-form-item label="微信二维码：" prop="wechatQr">
-        <el-input v-model="detail.wechatQr"></el-input>
+        <!-- <el-input v-model="detail.wechatQr"></el-input> -->
+        <single-upload v-model="detail.wechatQr" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
         <!-- <el-input v-model="detail.weight" style="width: 300px"></el-input>
         <span style="margin-left: 20px">克</span> -->
       </el-form-item>
-      <el-form-item label="品牌视频：" prop="brandVideo" :class="[]">
-        <single-upload v-model="detail.brandVideo" type="video" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+      <el-form-item label="抖音二维码：" prop="douyinQr" :class="[]">
+        <single-upload v-model="detail.douyinQr" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+      </el-form-item>
+      <el-form-item label="快手二维码：" prop="kuaishouQr" :class="[]">
+        <single-upload v-model="detail.kuaishouQr" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
       </el-form-item>
       <el-form-item label="商品统一宣传视频：" prop="goodsVideo" :class="[]">
         <single-upload v-model="detail.goodsVideo" type="video" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
       </el-form-item>
-      
       <el-form-item label="第四导航文案：" prop="fourthNavName">
         <el-input v-model="detail.fourthNavName"></el-input>
       </el-form-item>
@@ -88,6 +91,8 @@ const detaultDetail = {
   fourthNavName: null,
   goodsVideo: null,
   brandVideo: null,
+  douyinQr: null,
+  kuaishouQr: null,
 }
 
 export default {
