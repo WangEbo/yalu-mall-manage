@@ -62,6 +62,9 @@
       <el-form-item label="商品统一宣传视频：" prop="goodsVideo" :class="[]">
         <single-upload v-model="detail.goodsVideo" type="video" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
       </el-form-item>
+      <el-form-item label="上传品牌视频：" prop="brandVideo" :class="[]">
+        <single-upload v-model="detail.brandVideo" type="video" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+      </el-form-item>
       <el-form-item label="第四导航文案：" prop="fourthNavName">
         <el-input v-model="detail.fourthNavName"></el-input>
       </el-form-item>
