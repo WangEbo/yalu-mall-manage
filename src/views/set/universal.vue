@@ -1,16 +1,25 @@
 <template>
   <!-- 通用设置 -->
   <div class="app-container">
-    <el-form class="setting-form" :model="detail" :rules="rules" ref="settingForm" :disabled="formDisabled" label-width="160px" style="width: 600px" size="small">
+    <el-form class="setting-form" :model="detail" :rules="rules" ref="settingForm" :disabled="formDisabled" label-width="180px" style="width: 600px" size="small">
       <el-form-item label="logo：" prop="logo" :class="[formDisabled ? 'form-item-logo-disabled' : 'form-item-logo']">
         <single-upload v-model="detail.logo" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+      </el-form-item>
+      <el-form-item label="公司名称：" prop="detail">
+        <el-input v-model="detail.companyName"></el-input>
+      </el-form-item>
+      <el-form-item label="备案号：" prop="beianCode">
+        <el-input v-model="detail.beianCode"></el-input>
+      </el-form-item>
+      <el-form-item label="品牌介绍背景图路径：" prop="brandIntroImg">
+        <single-upload v-model="detail.brandIntroImg" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
       </el-form-item>
       <el-form-item label="团队定制信息：" prop="teamOrderInfo">
         <el-input v-model="detail.teamOrderInfo"></el-input>
       </el-form-item>
-      <el-form-item label="QQ客服：" prop="qq">
+      <!-- <el-form-item label="QQ客服：" prop="qq">
         <el-input v-model="detail.qq"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="邮编：" prop="zipCode">
         <el-input v-model="detail.zipCode"></el-input>
       </el-form-item>
@@ -82,7 +91,7 @@ import { getSetting, setSetting } from '../../api/set'
 const detaultDetail = {
   logo: null,
   teamOrderInfo: null,
-  qq: null,
+  // qq: null,
   zipCode: null,
   workingTime: null,
   telephone: null,
@@ -96,6 +105,9 @@ const detaultDetail = {
   brandVideo: null,
   douyinQr: null,
   kuaishouQr: null,
+  companyName: null,
+  beianCode: null,
+  brandIntroImg: null,
 }
 
 export default {
@@ -119,10 +131,10 @@ export default {
         teamOrderInfo: [
           {required: true, message: '请输入', trigger: 'blur'},
         ],
-        qq: [
-          {required: true, message: '请输入QQ', trigger: 'blur'},
-          {min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur'}
-        ],
+        // qq: [
+        //   {required: true, message: '请输入QQ', trigger: 'blur'},
+        //   {min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur'}
+        // ],
         zipCode: [
           {required: true, message: '请输入邮编', trigger: 'blur'},
           { pattern: /[1-9]{1}(\d+){5}/, message: '请输入正确格式的邮编', trigger: 'blur' },
@@ -154,6 +166,15 @@ export default {
         wechatQr: [
           {required: true, message: '请输入微信二维码', trigger: 'blur'},
           {min: 2, max:200, message: '长度在 2 到 200 个字符', trigger: 'blur'}
+        ],
+        companyName: [
+          {required: true, message: '请输入公司名称', trigger: 'blur'},
+        ],
+        beianCode: [
+          {required: true, message: '请输入备案号', trigger: 'blur'},
+        ],
+        brandIntroImg: [
+          {required: true, message: '请输入品牌介绍背景图路径', trigger: 'blur'},
         ],
       }
     }

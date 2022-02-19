@@ -72,6 +72,9 @@
             placeholder="选择资讯时间">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="排序：" prop="sort">
+          <el-input v-model="curDetail.sort" style="width: 250px"></el-input>
+        </el-form-item>
         <el-form-item label="封面图片：" prop="coverImg" :class="[]">
           <single-upload v-model="curDetail.coverImg" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
         </el-form-item>
@@ -91,28 +94,28 @@
 
 
     <el-dialog :close-on-click-modal="false" :title="'添加轮播图'" :visible.sync="carouselDialogVisible" width="900">
-    <el-form :model="carouselDetail" ref="carouselForm" :rules="carouselFormRules" label-width="150px" size="small">
-      <el-form-item label="图片：" prop="pic" :class="[]">
-        <single-upload :disabled="true" v-model="carouselDetail.pic" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
-      </el-form-item>
-      <el-form-item label="排序：" prop="sort">
-        <el-input v-model="carouselDetail.sort" style="width: 250px"></el-input>
-      </el-form-item>
-      <el-form-item label="商品推荐：">
-        <el-switch
-          v-model="carouselDetail.status"
-          :active-value="1"
-          :active-text="'上线'"
-          :inactive-value="0"
-          :inactive-text="'下线'">
-        </el-switch>
-      </el-form-item>
-    </el-form>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="carouselDialogVisible = false" size="small">取 消</el-button>
-      <el-button type="primary" @click="addToNewsCarousel()" size="small">确 定</el-button>
-    </span>
-  </el-dialog>
+      <el-form :model="carouselDetail" ref="carouselForm" :rules="carouselFormRules" label-width="150px" size="small">
+        <el-form-item label="图片：" prop="pic" :class="[]">
+          <single-upload :disabled="true" v-model="carouselDetail.pic" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
+        </el-form-item>
+        <el-form-item label="排序：" prop="sort">
+          <el-input v-model="carouselDetail.sort" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="商品推荐：">
+          <el-switch
+            v-model="carouselDetail.status"
+            :active-value="1"
+            :active-text="'上线'"
+            :inactive-value="0"
+            :inactive-text="'下线'">
+          </el-switch>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="carouselDialogVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="addToNewsCarousel()" size="small">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -135,7 +138,8 @@ const defaultNews = {
   coverImg: null,
   intro: null,
   content: null,
-  initalContent: '请输入内容'
+  initalContent: '请输入内容',
+  sort: null,
 };
 
 let defaultCarouselDetail = {
