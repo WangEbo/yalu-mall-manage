@@ -5,7 +5,7 @@
       <el-form-item label="logo：" prop="logo" :class="[formDisabled ? 'form-item-logo-disabled' : 'form-item-logo']">
         <single-upload v-model="detail.logo" style="width: 300px;display: inline-block;margin-left: 10px"></single-upload>
       </el-form-item>
-      <el-form-item label="公司名称：" prop="detail">
+      <el-form-item label="公司名称：" prop="companyName">
         <el-input v-model="detail.companyName"></el-input>
       </el-form-item>
       <el-form-item label="备案号：" prop="beianCode">
