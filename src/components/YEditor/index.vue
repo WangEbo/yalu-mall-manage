@@ -247,7 +247,12 @@ export default {
       })
     },
     setContent(){
-      quill.pasteHTML(this.initalValue)
+      quill && quill.pasteHTML('')
+      const self = this;
+      
+      setTimeout(()=> {
+        quill && quill.root && (quill.root.innerHTML = self.initalValue);
+      })
     }
   },
   destroyed() {
